@@ -129,6 +129,7 @@ class _InternshipPageState extends State<InternshipPage> {
   int _totalPages = 0;
   String message = '';
   List<int> favoriteInternships = [];
+  ScrollController _scrollController = ScrollController();
 
 
   @override
@@ -136,6 +137,13 @@ class _InternshipPageState extends State<InternshipPage> {
     super.initState();
     fetchData();
     getfav(widget.studentId);
+    _scrollController = ScrollController();
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
   }
 
   void profileData() {
@@ -235,6 +243,7 @@ class _InternshipPageState extends State<InternshipPage> {
       _currentPage++;
     });
     fetchDataWithFilters();
+    _scrollController.animateTo(0, duration: const Duration(milliseconds: 500), curve: Curves.ease);
   }
 
   void _prevPage() {
@@ -242,6 +251,7 @@ class _InternshipPageState extends State<InternshipPage> {
       _currentPage--;
     });
     fetchDataWithFilters();
+    _scrollController.animateTo(0, duration: const Duration(milliseconds: 500), curve: Curves.ease);
   }
   
   void filterInternships(String query) {
@@ -336,8 +346,7 @@ class _InternshipPageState extends State<InternshipPage> {
         apiUrl += 'all-internships';
       }
 
-      apiUrl +=
-          '/$_selectedDuration/starting-immediately/$_ifw/$_pt/$_ft/$_selectedStipend/$_iwjo/$_ofo/$_selectedLastUpdate/all?page=$_currentPage';
+      apiUrl += '/$_selectedDuration/starting-immediately/$_ifw/$_pt/$_ft/$_selectedStipend/$_iwjo/$_ofo/$_selectedLastUpdate/all?page=$_currentPage';
 
       //print(apiUrl);
 
@@ -618,6 +627,7 @@ class _InternshipPageState extends State<InternshipPage> {
           ),
           Expanded(
             child: ListView.builder(
+              controller: _scrollController,
               itemCount: filteredInternships.length,
               itemBuilder: (context, index) {
                 return Card(

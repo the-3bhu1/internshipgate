@@ -36,6 +36,7 @@ class StudentDashboard extends StatefulWidget {
 
 class _StudentDashboardState extends State<StudentDashboard> {
   final loadingIndicatorKey = const ValueKey('loading');
+  String fullname = '';
   bool isOpen = false;
   int totalApplication = 0;
   int receive = 0;
@@ -118,7 +119,7 @@ class _StudentDashboardState extends State<StudentDashboard> {
         if (data.isNotEmpty) {
           final Map<String, dynamic> basicDetail =
               data['applicant_basic_detail'] ?? {};
-
+          fullname = data['applicant_basic_detail']['name'];
           setState(() {
             _pic = basicDetail['pic'] ?? "";
             //print("check dashboard pic");
@@ -328,44 +329,12 @@ class _StudentDashboardState extends State<StudentDashboard> {
         }
       } else {
         var data = jsonDecode(response.body.toString());
-        //print('else data: $data');
+        print('else data: $data');
       }
     } catch (e) {
       print('error-chat: ${e.toString()}');
     }
   }
-
-  /*Future<void> fetchSkill(String applicantId) async {
-    try {
-      final response = await get(Uri.parse(
-          '${ApiEndPoints.baseUrl}getApplicantProfileById/$applicantId'));
-
-      if (response.statusCode == 200 || response.statusCode == 201) {
-        final Map<String, dynamic> data = json.decode(response.body);
-        if (data.isNotEmpty) {
-          final List<String> skillList = (data['applicant_software_skill']
-                      as List<dynamic>?)
-                  ?.map((entry) => (entry['software_skill'] as String?) ?? '')
-                  .toList() ??
-              [];
-          // String? applicantBasicDetailId = basicDetail['id']?.toString();
-
-          setState(() {
-            _savedSkills.clear();
-            _savedSkills.addAll(skillList);
-            //print("check saved skills in dash board");
-            //print(_savedSkills);
-          });
-        } else {
-          print("Empty response or unexpected data format");
-        }
-      } else {
-        print("Failed to fetch student profile: ${response.reasonPhrase}");
-      }
-    } catch (error) {
-      print("Error fetching student stu skill: $error");
-    }
-  }*/
 
   Future<void> fetchSkill(String applicantId) async {
     try {
@@ -453,10 +422,10 @@ class _StudentDashboardState extends State<StudentDashboard> {
     return NavigationBarTheme(
       data: NavigationBarThemeData(
         backgroundColor: const Color.fromARGB(255, 255, 255, 255),
-        labelTextStyle: MaterialStateProperty.all(
+        labelTextStyle: WidgetStateProperty.all(
           TextStyle(fontWeight: FontWeight.bold, fontSize: width * 0.033),
         ),
-        iconTheme: MaterialStateProperty.all(
+        iconTheme: WidgetStateProperty.all(
           IconThemeData(
             size: width * 0.048,
           ),
@@ -579,8 +548,8 @@ class _StudentDashboardState extends State<StudentDashboard> {
           leadingWidth: width * 0.1,
           backgroundColor: const Color.fromARGB(255, 255, 255, 255),
           title: GestureDetector(
-            onTap: () async {
-              Get.offAll(() => const AuthPage()); // Use a callback to instantiate AuthScreen
+            onTap: () {
+              _onTabChange(0);
             },
             child: Image.asset(
               'lib/icons/logo.png',
@@ -795,7 +764,7 @@ class _StudentDashboardState extends State<StudentDashboard> {
                           style: TextStyle(fontWeight: FontWeight.bold, fontSize: width * 0.07),
                         ),
                         Text(
-                          widget.fullname,
+                          fullname,
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: width * 0.07,
@@ -943,16 +912,6 @@ class _StudentDashboardState extends State<StudentDashboard> {
                                     'lib/images/hired.png',
                                     width: width * 0.125,
                                   )
-
-                            //       Expanded(
-                            //         child: SvgPicture.string(
-                            //           '''
-                            // <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="1em" height="1em" fill="currentColor"><path d="M5.5 7a.5.5 0 0 0 0 1h5a.5.5 0 0 0 0-1h-5zM5 9.5a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5zm0 2a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5z"></path><path d="M9.5 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V4.5L9.5 0zm0 1v2A1.5 1.5 0 0 0 11 4.5h2V14a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h5.5z"></path></svg>
-                            // ''',
-                            //           height: 25,
-                            //           color: Colors.green,
-                            //         ),
-                            //       )
                                 ],
                               ),
                             ),
@@ -960,9 +919,7 @@ class _StudentDashboardState extends State<StudentDashboard> {
                         ),
                       ],
                     ),
-                        SizedBox(
-                          height: height * 0.017,
-                        ),
+                    SizedBox(height: height * 0.017,),
                     Row(
                       children: [
                         Expanded(
@@ -1015,15 +972,6 @@ class _StudentDashboardState extends State<StudentDashboard> {
                                     'lib/images/rec.png',
                                     width: width * 0.125,
                                   )
-                            //       Expanded(
-                            //         child: SvgPicture.string(
-                            //           '''
-                            // <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="1em" height="1em" fill="currentColor"><path d="M8 11a.5.5 0 0 0 .5-.5V6.707l1.146 1.147a.5.5 0 0 0 .708-.708l-2-2a.5.5 0 0 0-.708 0l-2 2a.5.5 0 1 0 .708.708L7.5 6.707V10.5a.5.5 0 0 0 .5.5z"></path><path d="M4 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H4zm0 1h8a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1z"></path></svg>
-                            // ''',
-                            //           height: 25,
-                            //           color: Colors.blue,
-                            //         ),
-                            //       )
                                 ],
                               ),
                             ),
@@ -1035,36 +983,40 @@ class _StudentDashboardState extends State<StudentDashboard> {
                         Expanded(
                           child: GestureDetector(
                             onTap: () {
-                              Get.to(()=> StudFavoritesList(studentId: widget.recId));
+                              Get.to(() =>
+                                  StudFavoritesList(studentId: widget.recId));
                             },
                             child: Container(
-                              padding: EdgeInsets.symmetric(horizontal: width * 0.03),
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: width * 0.03),
                               width: double.infinity,
                               height: height * 0.17,
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(12),
                                 border: Border.all(
-                                  color: const Color.fromARGB(
-                                      255, 189, 189, 189),
+                                  color:
+                                      const Color.fromARGB(255, 189, 189, 189),
                                   width: 1,
                                 ),
                               ),
                               child: Row(
                                 crossAxisAlignment: CrossAxisAlignment.center,
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
                                 children: [
                                   Expanded(
                                     child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
                                       children: [
                                         Text(
                                           favorite.toString(),
                                           style: TextStyle(
                                               color: Colors.black,
                                               fontWeight: FontWeight.bold,
-                                              fontSize: width * 0.07
-                                          ),
+                                              fontSize: width * 0.07),
                                         ),
                                         SizedBox(
                                           height: height * 0.01,
@@ -1073,8 +1025,7 @@ class _StudentDashboardState extends State<StudentDashboard> {
                                           'Favorites',
                                           style: TextStyle(
                                               color: Colors.grey[600],
-                                              fontSize: width * 0.04
-                                          ),
+                                              fontSize: width * 0.04),
                                         )
                                       ],
                                     ),
@@ -1083,13 +1034,6 @@ class _StudentDashboardState extends State<StudentDashboard> {
                                     'lib/images/short.png',
                                     width: width * 0.125,
                                   )
-                                  // Expanded(
-                                  //   child: SvgPicture.string(
-                                  //     '''<svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 1024 1024" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M908.1 353.1l-253.9-36.9L540.7 86.1c-3.1-6.3-8.2-11.4-14.5-14.5-15.8-7.8-35-1.3-42.9 14.5L369.8 316.2l-253.9 36.9c-7 1-13.4 4.3-18.3 9.3a32.05 32.05 0 0 0 .6 45.3l183.7 179.1-43.4 252.9a31.95 31.95 0 0 0 46.4 33.7L512 754l227.1 119.4c6.2 3.3 13.4 4.4 20.3 3.2 17.4-3 29.1-19.5 26.1-36.9l-43.4-252.9 183.7-179.1c5-4.9 8.3-11.3 9.3-18.3 2.7-17.5-9.5-33.7-27-36.3zM664.8 561.6l36.1 210.3L512 672.7 323.1 772l36.1-210.3-152.8-149L417.6 382 512 190.7 606.4 382l211.2 30.7-152.8 148.9z"></path></svg>''',
-                                  //     height: 25,
-                                  //     color: Colors.red,
-                                  //   ),
-                                  // )
                                 ],
                               ),
                             ),
@@ -1097,9 +1041,7 @@ class _StudentDashboardState extends State<StudentDashboard> {
                         ),
                       ],
                     ),
-                        SizedBox(
-                          height: height * 0.017,
-                        ),
+                    SizedBox(height: height * 0.017,),
                     Row(
                       children: [
                         Expanded(
@@ -1112,9 +1054,6 @@ class _StudentDashboardState extends State<StudentDashboard> {
                                 throw 'Could not launch $uri';
                               }
                             },
-                            /*onTap: () {
-                              Get.to(()=> StudRejected(studentId: widget.recId));
-                            },*/
                             child: Container(
                               padding: EdgeInsets.symmetric(horizontal: width * 0.03),
                               width: double.infinity,
@@ -1168,28 +1107,6 @@ class _StudentDashboardState extends State<StudentDashboard> {
                         SizedBox(
                           width: width * 0.035,
                         ),
-                        // Expanded(
-                        //   child: Padding(
-                        //     padding: const EdgeInsets.all(10.0),
-                        //     child: Container(
-                        //       width:
-                        //           double.infinity, // Adjust the width as needed
-                        //       decoration: BoxDecoration(
-                        //         borderRadius: BorderRadius.circular(12),
-                        //         border: Border.all(
-                        //           color: const Color.fromARGB(255, 189, 189, 189),
-                        //           width: 1.5,
-                        //         ),
-                        //       ),
-                        //       child: StudChatButton(
-                        //         number: chatcount,
-                        //         title: 'Chat',
-                        //         icon: Iconsax.message,
-                        //         iconColor: Colors.purple,
-                        //       ),
-                        //     ),
-                        //   ),
-                        // ),
                         Expanded(
                           child: GestureDetector(
                             onTap: () {
@@ -1243,15 +1160,6 @@ class _StudentDashboardState extends State<StudentDashboard> {
                                     'lib/images/chat.png',
                                     width: width * 0.1205,
                                   )
-                           //        Expanded(
-                           //          child: SvgPicture.string(
-                           //            '''
-                           // <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 16 16" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M5 8a1 1 0 1 1-2 0 1 1 0 0 1 2 0zm4 0a1 1 0 1 1-2 0 1 1 0 0 1 2 0zm3 1a1 1 0 1 0 0-2 1 1 0 0 0 0 2z"></path><path d="m2.165 15.803.02-.004c1.83-.363 2.948-.842 3.468-1.105A9.06 9.06 0 0 0 8 15c4.418 0 8-3.134 8-7s-3.582-7-8-7-8 3.134-8 7c0 1.76.743 3.37 1.97 4.6a10.437 10.437 0 0 1-.524 2.318l-.003.011a10.722 10.722 0 0 1-.244.637c-.079.186.074.394.273.362a21.673 21.673 0 0 0 .693-.125zm.8-3.108a1 1 0 0 0-.287-.801C1.618 10.83 1 9.468 1 8c0-3.192 3.004-6 7-6s7 2.808 7 6c0 3.193-3.004 6-7 6a8.06 8.06 0 0 1-2.088-.272 1 1 0 0 0-.711.074c-.387.196-1.24.57-2.634.893a10.97 10.97 0 0 0 .398-2z"></path></svg>
-                           //  ''',
-                           //            height: 25,
-                           //            color: Colors.blue.shade900,
-                           //          ),
-                           //        )
                                 ],
                               ),
                             ),
@@ -1259,105 +1167,9 @@ class _StudentDashboardState extends State<StudentDashboard> {
                         ),
                       ],
                     ),
-                    // const SizedBox(height: 20),
-                    // Container(
-                    //   color: const Color.fromARGB(255, 255, 255, 255),
-                    //   padding: const EdgeInsets.symmetric(horizontal: 4.0),
-                    //   child: const Text(
-                    //     'Build Your Resume',
-                    //     style: TextStyle(
-                    //       fontSize: 23,
-                    //       fontWeight: FontWeight.bold,
-                    //       color: Color.fromRGBO(0, 0, 0, 0.76),
-                    //     ),
-                    //     textAlign: TextAlign.left, // Align the text to the left
-                    //   ),
-                    // ),
-
-                        SizedBox(
-                          height: height * 0.02,
-                        )
-
-                    // const SizedBox(height: 5),
-
-                    // Row(
-                    //   children: [
-                    //     const Image(
-                    //       image:
-                    //           AssetImage('lib/images/resume_build_dashboard.png'),
-                    //       width: 200,
-                    //       height: 140,
-                    //       fit: BoxFit.cover,
-                    //     ),
-                    //     Align(
-                    //       alignment: Alignment.topLeft,
-                    //       child: Container(
-                    //         width: 140,
-                    //         height: 40,
-                    //         decoration: BoxDecoration(
-                    //           borderRadius: BorderRadius.circular(8),
-                    //           boxShadow: [
-                    //             BoxShadow(
-                    //               color: Colors.white.withOpacity(0.25),
-                    //               offset: const Offset(0, 0),
-                    //               blurRadius: 2,
-                    //               spreadRadius: 1,
-                    //             ),
-                    //           ],
-                    //         ),
-                    //         child: TextButton(
-                    //           style: ButtonStyle(
-                    //             shape: MaterialStateProperty.all<
-                    //                 RoundedRectangleBorder>(
-                    //               RoundedRectangleBorder(
-                    //                 borderRadius: BorderRadius.circular(8),
-                    //                 side: BorderSide.none,
-                    //               ),
-                    //             ),
-                    //             backgroundColor: MaterialStateProperty.all<Color>(
-                    //               const Color.fromRGBO(249, 143, 67, 1),
-                    //             ),
-                    //             overlayColor: MaterialStateProperty.all<Color>(
-                    //               const Color.fromRGBO(196, 112, 51,
-                    //                   1), // Change to the color you desire when pressed
-                    //             ),
-                    //           ),
-                    //           onPressed: () async {
-                    //             final url = Uri.parse(
-                    //                 'https://internshipgate.com/ResumeBuilder');
-                    //             if (await canLaunchUrl(url)) {
-                    //               await launchUrl(url);
-                    //             } else {
-                    //               throw 'Could not launch $url';
-                    //             }
-                    //           },
-                    //           child: const Center(
-                    //             // Use the Center widget to center the text
-                    //             child: Row(
-                    //               mainAxisSize: MainAxisSize
-                    //                   .min, // To make the Row take the minimum space needed
-                    //               children: [
-                    //                 Text(
-                    //                   'Resume Builder',
-                    //                   style: TextStyle(
-                    //                     fontSize: 14,
-                    //                     color: Colors.white,
-                    //                     fontWeight: FontWeight.w600,
-                    //                   ),
-                    //                 ),
-                    //               ],
-                    //             ),
-                    //           ),
-                    //         ),
-                    //       ),
-                    //     ),
-                    //   ],
-                    // ),
-
-                    // _pages[_selectedIndex],
-                    //  StudentProfilePage(),
-                    // VirtualInternshipPage(),
-                    // InternshipListPage(),
+                    SizedBox(
+                      height: height * 0.02,
+                    )
                   ],
                 ),
               ),

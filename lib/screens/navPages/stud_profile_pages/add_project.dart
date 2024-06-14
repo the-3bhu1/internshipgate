@@ -239,6 +239,7 @@ class _AddProjectDetailsPageState extends State<AddProjectDetailsPage> {
                     hintText: 'Work From Home / City',
                   ),
                 ),
+                const SizedBox(height: 10.0),
                 // const Padding(
                 //   padding: EdgeInsets.symmetric(horizontal: 10.0),
                 //   child: Text(

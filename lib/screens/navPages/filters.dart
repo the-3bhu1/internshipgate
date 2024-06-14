@@ -79,6 +79,8 @@ class _FilterState extends State<Filter> {
       selectedDuration = "11-Weeks";
     } else if (widget.duration == "duration-12-W") {
       selectedDuration = "12-Weeks";
+    } else if (widget.duration == "all-duration") {
+      selectedDuration = "All";
     } else {
       selectedDuration = null;
     }
@@ -88,6 +90,8 @@ class _FilterState extends State<Filter> {
       selectedLastUpdate = "Last 3 Days";
     } else if (widget.lastUpdate == "Last-7-Days") {
       selectedLastUpdate = "Last 7 Days";
+    } else if (widget.lastUpdate == "all") {
+      selectedLastUpdate = "All";
     } else {
       selectedLastUpdate = null;
     }
@@ -99,6 +103,8 @@ class _FilterState extends State<Filter> {
       selectedStipend = "2000-5000";
     } else if (widget.stipend == "stipend-5000,max") {
       selectedStipend = "Above 5000";
+    }  else if (widget.stipend == "stipend-any") {
+      selectedStipend = "All";
     } else {
       selectedStipend = null;
     }
@@ -120,6 +126,7 @@ class _FilterState extends State<Filter> {
   String? selectedDuration;
   String selectedDurationValue = 'all-duration';
   List<String> duration = [
+    "All",
     "1-Month",
     "2-Months",
     "3-Months",
@@ -148,6 +155,7 @@ class _FilterState extends State<Filter> {
   String? selectedLastUpdate;
   String selectedLastUpdateValue = 'all';
   final List<String> lastUpdate = [
+    "All",
     "Last 1 Day",
     "Last 3 Days",
     "Last 7 Days",
@@ -155,6 +163,7 @@ class _FilterState extends State<Filter> {
   String? selectedStipend;
   String selectedStipendValue = 'stipend-any';
   final List<String> stipend = [
+    "All",
     "Unpaid",
     "0-2000",
     "2000-5000",
